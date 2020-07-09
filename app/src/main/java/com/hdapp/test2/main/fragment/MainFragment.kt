@@ -30,6 +30,12 @@ class MainFragment() : BaseFragment(), LifecycleOwner  {
         if (activity is MainActivity) {
             titleCallback = activity as MainActivity
         }
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setRetainInstance(true);
     }
 
     override fun onCreateView(
@@ -41,12 +47,17 @@ class MainFragment() : BaseFragment(), LifecycleOwner  {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mainViewModel = ViewModelProvider(this, ViewModelFactory(api, db))
-            .get(MainViewModel::class.java)
+        if(savedInstanceState == null) {
+            mainViewModel = ViewModelProvider(this, ViewModelFactory(api, db))
+                .get(MainViewModel::class.java)
+            if (isNetworkConnected()) {
+                mainViewModel.getData()
+            } else {
+                root_layout.snackbar(getString(R.string.no_intenet_connection))
+            }
+        }
         swipeToRefresh.setColorSchemeResources(R.color.colorAccent);
         setListener();
-        mainViewModel.getData()
-
         setObserver()
     }
 
@@ -66,7 +77,10 @@ class MainFragment() : BaseFragment(), LifecycleOwner  {
             mainViewModel.getRows().observe(it, Observer {
                 val adapter = context?.let { it1 -> RowAdapter(it1, it) }
                 rvRow.setHasFixedSize(true)
-                rvRow.layoutManager = LinearLayoutManager(context)
+                val linearLayoutManager = LinearLayoutManager(context)
+                linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+                rvRow.setHasFixedSize(true)
+                rvRow.layoutManager = linearLayoutManager
                 rvRow.adapter = adapter
                 adapter?.notifyDataSetChanged()
             })

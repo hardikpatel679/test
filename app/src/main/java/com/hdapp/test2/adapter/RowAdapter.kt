@@ -18,7 +18,7 @@ import java.util.*
 class RowAdapter(var context: Context, var tempList: List<Row>) :
     RecyclerView.Adapter<RowAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RowAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val listItem: View = layoutInflater.inflate(R.layout.item_row, parent, false)
         return ViewHolder(listItem)
@@ -28,7 +28,7 @@ class RowAdapter(var context: Context, var tempList: List<Row>) :
         return tempList.size
     }
 
-    override fun onBindViewHolder(holder: RowAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val temp: Row = tempList.get(position)
         holder.tvdescription.setText(temp.description?.trim())
         Glide.with(context).load(temp.imageHref).placeholder(R.drawable.ic_noimage)

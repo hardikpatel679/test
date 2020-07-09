@@ -15,8 +15,12 @@ class MainActivity : BaseActivity(), TitleListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        supportActionBar?.title = "";
     }
 
+    /**
+     * this function set the title name fatch from remote repository.
+     */
     override fun setTitle(title: String) {
         supportActionBar?.title = title
     }
